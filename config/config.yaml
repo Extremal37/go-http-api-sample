@@ -1,0 +1,6 @@
+app:
+  # Log leverl: debug, info, warn, error
+  logging: "debug"
+
+  # HTTP port to listen to
+  listen_port: 8080
