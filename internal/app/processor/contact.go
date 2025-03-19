@@ -8,6 +8,6 @@ func (p *Processor) AddContact(contact models.Contact) {
 }
 
 // GetContacts Return all contacts from the storage
-func (p *Processor) GetContacts() *[]models.Contact {
+func (p *Processor) GetContacts() []models.Contact {
 	return p.storage.GetContacts()
 }
