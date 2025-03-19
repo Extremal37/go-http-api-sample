@@ -1,16 +1,21 @@
 package processor
 
 import (
-	"github.com/Extremal37/go-http-api-sample/internal/app/storage"
+	"github.com/Extremal37/go-http-api-sample/internal/app/models"
 	"go.uber.org/zap"
 )
 
-type Processor struct {
-	log     *zap.SugaredLogger
-	storage storage.Storage
+type Storage interface {
+	AddContact(contact models.Contact)
+	GetContacts() []models.Contact
 }
 
-func NewProcessor(storage storage.Storage, log *zap.SugaredLogger) *Processor {
+type Processor struct {
+	log     *zap.SugaredLogger
+	storage Storage
+}
+
+func NewProcessor(storage Storage, log *zap.SugaredLogger) *Processor {
 	return &Processor{
 		storage: storage,
 		log:     log,

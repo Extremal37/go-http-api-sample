@@ -7,7 +7,6 @@ import (
 	"github.com/Extremal37/go-http-api-sample/api"
 	"github.com/Extremal37/go-http-api-sample/internal/app/handlers"
 	"github.com/Extremal37/go-http-api-sample/internal/app/processor"
-	"github.com/Extremal37/go-http-api-sample/internal/app/storage"
 	"github.com/Extremal37/go-http-api-sample/internal/app/storage/slice"
 	"github.com/Extremal37/go-http-api-sample/internal/cfg"
 	"net/http"
@@ -23,7 +22,7 @@ type Server struct {
 
 	httpServer *http.Server
 	processor  *processor.Processor
-	storage    storage.Storage
+	storage    processor.Storage
 }
 
 func NewServer(cfg *cfg.Configuration, logger *zap.SugaredLogger) *Server {
