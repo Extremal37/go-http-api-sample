@@ -33,6 +33,7 @@ func main() {
 	case <-ctx.Done():
 		stop()
 		server.Shutdown()
+		logger.Info("The service has been terminated successfully")
 		os.Exit(0)
 	}
 
