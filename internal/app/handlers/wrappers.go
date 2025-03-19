@@ -17,7 +17,10 @@ func (h *Handler) WrapErrorWithStatus(w http.ResponseWriter, msg error, httpStat
 		Result:  msg.Error(),
 	}
 
-	res, _ := json.Marshal(m)
+	res, err := json.Marshal(m)
+	if err != nil {
+		h.log.Warnf("Unable to encoding to JSON %v: %v", m, err)
+	}
 	// даем понять что ответ приходит в формате json
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
