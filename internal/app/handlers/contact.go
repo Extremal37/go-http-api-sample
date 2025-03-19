@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Extremal37/go-http-api-sample/internals/app/models"
+	"github.com/Extremal37/go-http-api-sample/internal/app/models"
 	"io"
 	"net/http"
 )

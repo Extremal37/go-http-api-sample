@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/Extremal37/go-http-api-sample/api/middleware"
-	"github.com/Extremal37/go-http-api-sample/internals/app/handlers"
+	"github.com/Extremal37/go-http-api-sample/internal/app/handlers"
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 	"net/http"

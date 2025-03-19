@@ -1,7 +1,7 @@
 package slice
 
 import (
-	"github.com/Extremal37/go-http-api-sample/internals/app/models"
+	"github.com/Extremal37/go-http-api-sample/internal/app/models"
 	"go.uber.org/zap"
 )
 

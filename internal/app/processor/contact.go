@@ -1,6 +1,6 @@
 package processor
 
-import "github.com/Extremal37/go-http-api-sample/internals/app/models"
+import "github.com/Extremal37/go-http-api-sample/internal/app/models"
 
 // AddContact Saving new contact to the storage
 func (p *Processor) AddContact(contact models.Contact) {

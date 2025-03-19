@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/Extremal37/go-http-api-sample/internals/app"
-	"github.com/Extremal37/go-http-api-sample/internals/cfg"
-	"github.com/Extremal37/go-http-api-sample/internals/log"
+	"github.com/Extremal37/go-http-api-sample/internal/app"
+	"github.com/Extremal37/go-http-api-sample/internal/cfg"
+	"github.com/Extremal37/go-http-api-sample/internal/log"
 	"os"
 	"os/signal"
 	"syscall"

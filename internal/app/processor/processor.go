@@ -1,7 +1,7 @@
 package processor
 
 import (
-	"github.com/Extremal37/go-http-api-sample/internals/app/storage"
+	"github.com/Extremal37/go-http-api-sample/internal/app/storage"
 	"go.uber.org/zap"
 )
 

@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/Extremal37/go-http-api-sample/internals/app/processor"
+	"github.com/Extremal37/go-http-api-sample/internal/app/processor"
 	"go.uber.org/zap"
 )
 
