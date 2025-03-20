@@ -6,11 +6,6 @@ import (
 	"net/http"
 )
 
-//type Response struct {
-//	Success bool        `json:"success"`
-//	Result  interface{} `json:"result,omitempty"`
-//}
-
 type ResponseWithError struct {
 	Success bool        `json:"success"`
 	Result  interface{} `json:"result,omitempty"`

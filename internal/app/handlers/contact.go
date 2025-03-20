@@ -8,12 +8,36 @@ import (
 	"net/http"
 )
 
+type ContactJsonDTO struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+}
+
+func contactToJSON(contact models.Contact) ContactJsonDTO {
+	return ContactJsonDTO{
+		FirstName: contact.FirstName,
+		LastName:  contact.LastName,
+	}
+}
+
+func jsonToContact(json ContactJsonDTO) models.Contact {
+	return models.Contact{
+		FirstName: json.FirstName,
+		LastName:  json.LastName,
+	}
+}
+
 func (h *Handler) GetContacts(w http.ResponseWriter, r *http.Request) {
-	contacts := h.p.GetContacts()
+	contactsRaw := h.p.GetContacts()
+	var contactsJSON []ContactJsonDTO
+
+	for _, v := range contactsRaw {
+		contactsJSON = append(contactsJSON, contactToJSON(v))
+	}
 
 	m := ResponseSuccess{
 		Success: true,
-		Result:  contacts,
+		Result:  contactsJSON,
 	}
 
 	h.WrapOK(w, m)
@@ -27,14 +51,14 @@ func (h *Handler) AddContact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var contact models.Contact
+	var contactJSON ContactJsonDTO
 
-	if err = json.Unmarshal(body, &contact); err != nil {
+	if err = json.Unmarshal(body, &contactJSON); err != nil {
 		h.WrapBadRequest(w, fmt.Errorf("unable to parse contacat payload: %w", err))
 		return
 	}
 
-	h.p.AddContact(contact)
+	h.p.AddContact(jsonToContact(contactJSON))
 	m := ResponseSuccess{
 		Success: true,
 		Result:  nil,

@@ -6,23 +6,48 @@ import (
 )
 
 type Storage struct {
-	slice []models.Contact
+	slice []ContactStorageDTO
 	log   *zap.SugaredLogger
 }
 
+type ContactStorageDTO struct {
+	FirstName string `db:"first_name"`
+	LastName  string `db:"last_name"`
+}
+
 func NewStorage(log *zap.SugaredLogger) *Storage {
-	slice := make([]models.Contact, 0)
+	slice := make([]ContactStorageDTO, 0)
 	return &Storage{
 		slice: slice,
 		log:   log.With("storage", "slice"),
 	}
 }
 
+func contactToStorage(contact models.Contact) ContactStorageDTO {
+	return ContactStorageDTO{
+		FirstName: contact.FirstName,
+		LastName:  contact.LastName,
+	}
+
+}
+
+func storageToContact(storage ContactStorageDTO) models.Contact {
+	return models.Contact{
+		FirstName: storage.FirstName,
+		LastName:  storage.LastName,
+	}
+}
+
 func (s *Storage) AddContact(contact models.Contact) {
-	s.slice = append(s.slice, contact)
+	s.slice = append(s.slice, contactToStorage(contact))
 	s.log.Infof("Contact added: %v", contact)
 }
 
 func (s *Storage) GetContacts() []models.Contact {
-	return s.slice
+	var contacts []models.Contact
+
+	for _, v := range s.slice {
+		contacts = append(contacts, storageToContact(v))
+	}
+	return contacts
 }
