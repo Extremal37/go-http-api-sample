@@ -8,6 +8,18 @@ import (
 	"net/http"
 )
 
+type Handler interface {
+	GetContacts(w http.ResponseWriter, r *http.Request)
+	AddContact(w http.ResponseWriter, r *http.Request)
+	WrapErrorWithStatus(w http.ResponseWriter, msg error, httpStatus int)
+	WrapSuccessStatus(w http.ResponseWriter, m handlers.Response, httpStatus int)
+	WrapNew(w http.ResponseWriter, m handlers.Response)
+	WrapOK(w http.ResponseWriter, m handlers.Response)
+	WrapBadRequest(w http.ResponseWriter, err error)
+	WrapNotFound(w http.ResponseWriter, r *http.Request)
+	WrapMethodNotAllowed(w http.ResponseWriter, r *http.Request)
+}
+
 func CreateRoutes(handler *handlers.Handler, log *zap.SugaredLogger) *mux.Router {
 	r := mux.NewRouter()
 
