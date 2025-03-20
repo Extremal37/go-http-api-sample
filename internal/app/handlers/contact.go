@@ -11,7 +11,7 @@ import (
 func (h *Handler) GetContacts(w http.ResponseWriter, r *http.Request) {
 	contacts := h.p.GetContacts()
 
-	m := Response{
+	m := ResponseSuccess{
 		Success: true,
 		Result:  contacts,
 	}
@@ -35,7 +35,7 @@ func (h *Handler) AddContact(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.p.AddContact(contact)
-	m := Response{
+	m := ResponseSuccess{
 		Success: true,
 		Result:  nil,
 	}

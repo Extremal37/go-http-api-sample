@@ -6,13 +6,18 @@ import (
 	"net/http"
 )
 
-type Response struct {
+//type Response struct {
+//	Success bool        `json:"success"`
+//	Result  interface{} `json:"result,omitempty"`
+//}
+
+type ResponseWithError struct {
 	Success bool        `json:"success"`
 	Result  interface{} `json:"result,omitempty"`
 }
 
 func (h *Handler) WrapErrorWithStatus(w http.ResponseWriter, msg error, httpStatus int) {
-	m := Response{
+	m := ResponseWithError{
 		Success: false,
 		Result:  msg.Error(),
 	}
@@ -30,8 +35,13 @@ func (h *Handler) WrapErrorWithStatus(w http.ResponseWriter, msg error, httpStat
 	}
 }
 
+type ResponseSuccess struct {
+	Success bool        `json:"success"`
+	Result  interface{} `json:"result,omitempty"`
+}
+
 // WrapSuccessStatus write map as json reply to httpWriter with success code.
-func (h *Handler) WrapSuccessStatus(w http.ResponseWriter, m Response, httpStatus int) {
+func (h *Handler) WrapSuccessStatus(w http.ResponseWriter, m ResponseSuccess, httpStatus int) {
 	res, _ := json.Marshal(m)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
@@ -42,11 +52,11 @@ func (h *Handler) WrapSuccessStatus(w http.ResponseWriter, m Response, httpStatu
 	}
 }
 
-func (h *Handler) WrapNew(w http.ResponseWriter, m Response) {
+func (h *Handler) WrapNew(w http.ResponseWriter, m ResponseSuccess) {
 	h.WrapSuccessStatus(w, m, http.StatusCreated)
 }
 
-func (h *Handler) WrapOK(w http.ResponseWriter, m Response) {
+func (h *Handler) WrapOK(w http.ResponseWriter, m ResponseSuccess) {
 	h.WrapSuccessStatus(w, m, http.StatusOK)
 }
 
