@@ -2,7 +2,11 @@ package main
 
 import (
 	"context"
+	"github.com/Extremal37/go-http-api-sample/api"
 	"github.com/Extremal37/go-http-api-sample/internal/app"
+	"github.com/Extremal37/go-http-api-sample/internal/app/handlers"
+	"github.com/Extremal37/go-http-api-sample/internal/app/processor"
+	"github.com/Extremal37/go-http-api-sample/internal/app/storage/slice"
 	"github.com/Extremal37/go-http-api-sample/internal/cfg"
 	"github.com/Extremal37/go-http-api-sample/internal/log"
 	"os"
@@ -11,6 +15,7 @@ import (
 )
 
 func main() {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill, syscall.SIGTERM)
 	// Load config
 	config, err := cfg.LoadAndStoreConfig()
 	if err != nil {
@@ -21,12 +26,19 @@ func main() {
 	logger := log.NewLogger(config.App.Logging)
 
 	// Creating server with loaded config
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill, syscall.SIGTERM)
-	server := app.NewServer(config, logger)
+	logger.Debug("Connecting to storage")
+	storage := slice.NewStorage(logger)
+
+	logger.Debug("Spawning processor and handler")
+	proc := processor.NewProcessor(storage, logger)
+	hdl := handlers.NewHandler(proc, logger)
+	routes := api.CreateRoutes(hdl, logger)
+
+	server := app.NewServer(config, proc, storage, logger)
 
 	// Launching server
 
-	go server.Serve()
+	go server.Serve(routes)
 
 	// Ждём сигнала завершения приложения
 	select {

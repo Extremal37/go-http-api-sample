@@ -4,11 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/Extremal37/go-http-api-sample/api"
-	"github.com/Extremal37/go-http-api-sample/internal/app/handlers"
 	"github.com/Extremal37/go-http-api-sample/internal/app/processor"
-	"github.com/Extremal37/go-http-api-sample/internal/app/storage/slice"
 	"github.com/Extremal37/go-http-api-sample/internal/cfg"
+	"github.com/gorilla/mux"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -25,26 +23,17 @@ type Server struct {
 	storage    processor.Storage
 }
 
-func NewServer(cfg *cfg.Configuration, logger *zap.SugaredLogger) *Server {
+func NewServer(cfg *cfg.Configuration, processor *processor.Processor, storage processor.Storage, logger *zap.SugaredLogger) *Server {
 	return &Server{
-		log:    logger,
-		config: cfg,
+		log:       logger,
+		processor: processor,
+		storage:   storage,
+		config:    cfg,
 	}
 }
 
-func (s *Server) Serve() {
+func (s *Server) Serve(routes *mux.Router) {
 	s.log.Infof("%s starting", appName)
-
-	s.log.Debug("Connecting to storage")
-	s.storage = slice.NewStorage(s.log)
-
-	s.log.Debug("Spawning processor and handler")
-	s.processor = processor.NewProcessor(s.storage, s.log)
-
-	hdl := handlers.NewHandler(s.processor, s.log)
-
-	routes := api.CreateRoutes(hdl, s.log)
-
 	s.log.Infof("Starting HTTP listener on port %d", s.config.App.ListenPort)
 	s.httpServer = &http.Server{
 		Addr:    fmt.Sprintf(":%d", s.config.App.ListenPort),
