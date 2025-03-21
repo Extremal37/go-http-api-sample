@@ -6,6 +6,7 @@ app:
   address: ":8080"
 
   # Storage: slice,postgres
+  storage: "postgres"
 
 
 postgres:

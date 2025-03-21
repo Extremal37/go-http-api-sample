@@ -22,6 +22,7 @@ const (
 type App struct {
 	Logging string `yaml:"logging"`
 	Address string `yaml:"address"`
+	Storage string `yaml:"storage"`
 }
 
 type Postgres struct {
