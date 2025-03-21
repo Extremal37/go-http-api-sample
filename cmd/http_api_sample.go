@@ -7,7 +7,7 @@ import (
 	"github.com/Extremal37/go-http-api-sample/internal/app/handlers"
 	"github.com/Extremal37/go-http-api-sample/internal/app/processor"
 	"github.com/Extremal37/go-http-api-sample/internal/app/storage/slice"
-	"github.com/Extremal37/go-http-api-sample/internal/app/storage/slice/psql"
+	"github.com/Extremal37/go-http-api-sample/internal/app/storage/psql"
 	"github.com/Extremal37/go-http-api-sample/internal/cfg"
 	"github.com/Extremal37/go-http-api-sample/internal/log"
 	"os"
