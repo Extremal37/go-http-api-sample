@@ -11,8 +11,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const appName = "HTTP API Sample Server by Dmitry Tumalanov"
-
 type Server struct {
 	log    *zap.SugaredLogger
 	config *cfg.Configuration
@@ -32,7 +30,6 @@ func NewServer(cfg *cfg.Configuration, processor *processor.Processor, storage p
 }
 
 func (s *Server) Serve(routes *mux.Router) {
-	s.log.Infof("%s starting", appName)
 	s.log.Infof("Starting HTTP listener on address %s", s.config.App.Address)
 	s.httpServer = &http.Server{
 		Addr:    s.config.App.Address,

@@ -4,3 +4,14 @@ app:
 
   # HTTP address and port to listen to
   address: ":8080"
+
+  # Storage: slice,postgres
+  storage: "postgres"
+
+
+postgres:
+  host: localhost
+  port: 5432
+  database: postgres
+  username: postgres
+  password: password

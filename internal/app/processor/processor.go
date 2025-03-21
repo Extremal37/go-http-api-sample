@@ -1,13 +1,14 @@
 package processor
 
 import (
+	"context"
 	"github.com/Extremal37/go-http-api-sample/internal/app/models"
 	"go.uber.org/zap"
 )
 
 type Storage interface {
-	AddContact(contact models.Contact)
-	GetContacts() []models.Contact
+	AddContact(ctx context.Context, contact models.Contact) error
+	GetContacts(ctx context.Context) ([]models.Contact, error)
 }
 
 type Processor struct {

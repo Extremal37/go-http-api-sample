@@ -28,7 +28,11 @@ func jsonToContact(json ContactJsonDTO) models.Contact {
 }
 
 func (h *Handler) GetContacts(w http.ResponseWriter, r *http.Request) {
-	contactsRaw := h.p.GetContacts()
+	contactsRaw, err := h.p.GetContacts(r.Context())
+	if err != nil {
+		h.WrapError(w, fmt.Errorf("unable to get contacts: %w", err))
+		return
+	}
 	var contactsJSON []ContactJsonDTO
 
 	for _, v := range contactsRaw {
@@ -58,7 +62,12 @@ func (h *Handler) AddContact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.p.AddContact(jsonToContact(contactJSON))
+	err = h.p.AddContact(r.Context(), jsonToContact(contactJSON))
+	if err != nil {
+		h.WrapError(w, fmt.Errorf("unable to add contact: %w", err))
+		return
+	}
+
 	m := ResponseSuccess{
 		Success: true,
 		Result:  nil,

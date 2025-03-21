@@ -7,6 +7,7 @@ import (
 	"github.com/Extremal37/go-http-api-sample/internal/app/handlers"
 	"github.com/Extremal37/go-http-api-sample/internal/app/processor"
 	"github.com/Extremal37/go-http-api-sample/internal/app/storage/slice"
+	"github.com/Extremal37/go-http-api-sample/internal/app/storage/psql"
 	"github.com/Extremal37/go-http-api-sample/internal/cfg"
 	"github.com/Extremal37/go-http-api-sample/internal/log"
 	"os"
@@ -14,7 +15,14 @@ import (
 	"syscall"
 )
 
+const (
+	appName         = "HTTP API Sample Server by Dmitry Tumalanov"
+	storageSlice    = "slice"
+	storagePostgres = "postgres"
+)
+
 func main() {
+
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill, syscall.SIGTERM)
 	// Load config
 	config, err := cfg.LoadAndStoreConfig()
@@ -26,8 +34,18 @@ func main() {
 	logger := log.NewLogger(config.App.Logging)
 
 	// Creating server with loaded config
-	logger.Debug("Connecting to storage")
-	storage := slice.NewStorage(logger)
+	logger.Infof("%s starting", appName)
+	logger.Debugf("Connecting to storage %s", config.App.Storage)
+
+	var storage processor.Storage
+	switch config.App.Storage {
+	case storageSlice:
+		storage = slice.NewStorage(logger)
+	case storagePostgres:
+		storage = psql.NewStorage(ctx, config.Postgres, logger)
+	default:
+		logger.Fatalf("Unknown storage %s. Supported storages are %v", config.App.Storage, []string{storagePostgres, storageSlice})
+	}
 
 	logger.Debug("Spawning processor and handler")
 	proc := processor.NewProcessor(storage, logger)

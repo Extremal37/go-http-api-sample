@@ -1,14 +1,15 @@
 package handlers
 
 import (
+	"context"
 	"github.com/Extremal37/go-http-api-sample/internal/app/models"
 	"github.com/Extremal37/go-http-api-sample/internal/app/processor"
 	"go.uber.org/zap"
 )
 
 type Processor interface {
-	AddContact(contact models.Contact)
-	GetContacts() []models.Contact
+	AddContact(ctx context.Context, contact models.Contact) error
+	GetContacts(ctx context.Context) ([]models.Contact, error)
 }
 
 type Handler struct {
