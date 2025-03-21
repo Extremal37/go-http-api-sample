@@ -72,3 +72,9 @@ func (h *Handler) WrapMethodNotAllowed(w http.ResponseWriter, r *http.Request) {
 	h.log.Debugf("Incorrect method: %v", r.Method)
 	h.WrapErrorWithStatus(w, fmt.Errorf("method not allowed"), http.StatusMethodNotAllowed)
 }
+
+// WrapError write json error to httpWriter handler with 500 code.
+func (h *Handler) WrapError(w http.ResponseWriter, err error) {
+	h.log.Warnf("Internal error: %v", err)
+	h.WrapErrorWithStatus(w, err, http.StatusInternalServerError)
+}
