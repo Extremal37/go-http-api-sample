@@ -13,12 +13,12 @@ const (
 )
 const (
 	appLogging    = "debug"
-	appListenPort = 8080
+	appListenPort = ":8080"
 )
 
 type App struct {
-	Logging    string `yaml:"logging"`
-	ListenPort uint16 `yaml:"listen_port"`
+	Logging string `yaml:"logging"`
+	Address string `yaml:"address"`
 }
 
 type Configuration struct {

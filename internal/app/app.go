@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/Extremal37/go-http-api-sample/internal/app/processor"
 	"github.com/Extremal37/go-http-api-sample/internal/cfg"
 	"github.com/gorilla/mux"
@@ -34,9 +33,9 @@ func NewServer(cfg *cfg.Configuration, processor *processor.Processor, storage p
 
 func (s *Server) Serve(routes *mux.Router) {
 	s.log.Infof("%s starting", appName)
-	s.log.Infof("Starting HTTP listener on port %d", s.config.App.ListenPort)
+	s.log.Infof("Starting HTTP listener on address %s", s.config.App.Address)
 	s.httpServer = &http.Server{
-		Addr:    fmt.Sprintf(":%d", s.config.App.ListenPort),
+		Addr:    s.config.App.Address,
 		Handler: routes,
 	}
 
