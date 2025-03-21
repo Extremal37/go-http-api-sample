@@ -18,6 +18,7 @@ type Handler interface {
 	WrapBadRequest(w http.ResponseWriter, err error)
 	WrapNotFound(w http.ResponseWriter, r *http.Request)
 	WrapMethodNotAllowed(w http.ResponseWriter, r *http.Request)
+	WrapError(w http.ResponseWriter, err error)
 }
 
 func CreateRoutes(handler *handlers.Handler, log *zap.SugaredLogger) *mux.Router {
