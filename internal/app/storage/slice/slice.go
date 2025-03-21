@@ -1,6 +1,7 @@
 package slice
 
 import (
+	"context"
 	"github.com/Extremal37/go-http-api-sample/internal/app/models"
 	"go.uber.org/zap"
 )
@@ -38,16 +39,17 @@ func storageToContact(storage ContactStorageDTO) models.Contact {
 	}
 }
 
-func (s *Storage) AddContact(contact models.Contact) {
+func (s *Storage) AddContact(ctx context.Context, contact models.Contact) error {
 	s.slice = append(s.slice, contactToStorage(contact))
 	s.log.Infof("Contact added: %v", contact)
+	return nil
 }
 
-func (s *Storage) GetContacts() []models.Contact {
+func (s *Storage) GetContacts(ctx context.Context) ([]models.Contact, error) {
 	var contacts []models.Contact
 
 	for _, v := range s.slice {
 		contacts = append(contacts, storageToContact(v))
 	}
-	return contacts
+	return contacts, nil
 }
