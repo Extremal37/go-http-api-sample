@@ -16,11 +16,13 @@ import (
 )
 
 const (
+	appName         = "HTTP API Sample Server by Dmitry Tumalanov"
 	storageSlice    = "slice"
 	storagePostgres = "postgres"
 )
 
 func main() {
+
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill, syscall.SIGTERM)
 	// Load config
 	config, err := cfg.LoadAndStoreConfig()
@@ -32,6 +34,7 @@ func main() {
 	logger := log.NewLogger(config.App.Logging)
 
 	// Creating server with loaded config
+	logger.Infof("%s starting", appName)
 	logger.Debugf("Connecting to storage %s", config.App.Storage)
 
 	var storage processor.Storage
