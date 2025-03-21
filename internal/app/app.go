@@ -47,6 +47,8 @@ func (s *Server) Serve(routes *mux.Router) {
 }
 func (s *Server) Shutdown() {
 	if s.httpServer != nil {
-		_ = s.httpServer.Shutdown(context.Background())
+		if err := s.httpServer.Shutdown(context.Background()); err != nil {
+			s.log.Errorf("Failed to shutdown HTTP Server: %v", err)
+		}
 	}
 }
