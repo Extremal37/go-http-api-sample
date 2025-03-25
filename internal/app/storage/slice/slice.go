@@ -40,16 +40,21 @@ func storageToContact(storage ContactStorageDTO) models.Contact {
 }
 
 func (s *Storage) AddContact(ctx context.Context, contact models.Contact) error {
+	_ = ctx
 	s.slice = append(s.slice, contactToStorage(contact))
 	s.log.Infof("Contact added: %v", contact)
 	return nil
 }
 
 func (s *Storage) GetContacts(ctx context.Context) ([]models.Contact, error) {
+	_ = ctx
 	var contacts []models.Contact
 
 	for _, v := range s.slice {
 		contacts = append(contacts, storageToContact(v))
 	}
 	return contacts, nil
+}
+func (s *Storage) Stop() {
+	s.log.Debug("Method not implemented")
 }

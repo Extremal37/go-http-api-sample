@@ -24,3 +24,6 @@ func NewStorage(conn *pgxpool.Pool, log *zap.SugaredLogger) *Storage {
 	}
 
 }
+func (s *Storage) Stop() {
+	s.conn.Close()
+}

@@ -58,19 +58,22 @@ func main() {
 			log.Fatalf("Unable to establish connection to database: %v", err.Error())
 		}
 		defer func() {
+			logger.Info("Closing database connections")
 			db.Close()
 		}()
-
 		if err = psql.MigrateUp(db); err != nil {
 			db.Close()
 			log.Fatalf("unable to migrate up: %s", err.Error())
 		}
 
-		logger.Info("Successfully connected")
+		logger.Info("Successfully connected to storage postgres")
 		storage = psql.NewStorage(db, logger.With(storagePostgres, endpoint))
 	default:
 		logger.Fatalf("Unknown storage %s. Supported storages are %v", config.App.Storage, []string{storagePostgres, storageSlice})
 	}
+	defer func() {
+		storage.Stop()
+	}()
 
 	logger.Debug("Spawning processor and handler")
 	proc := processor.NewProcessor(storage, logger)
