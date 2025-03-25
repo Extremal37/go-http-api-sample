@@ -33,7 +33,7 @@ func (s *Storage) AddContact(ctx context.Context, contact models.Contact) error 
 	dto := contactToStorage(contact)
 
 	query := `INSERT INTO contacts (first_name,last_name) VALUES ($1,$2)`
-	_, err := s.conn.Exec(c, query, &dto.FirstName, &dto.LastName)
+	_, err := s.conn.Exec(c, query, dto.FirstName, dto.LastName)
 	if err != nil {
 		s.log.Errorf("Failed to insert contact to DB: %v", err)
 		return err
