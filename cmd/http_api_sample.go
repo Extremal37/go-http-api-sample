@@ -6,8 +6,8 @@ import (
 	"github.com/Extremal37/go-http-api-sample/internal/app"
 	"github.com/Extremal37/go-http-api-sample/internal/app/handlers"
 	"github.com/Extremal37/go-http-api-sample/internal/app/processor"
-	"github.com/Extremal37/go-http-api-sample/internal/app/storage/slice"
 	"github.com/Extremal37/go-http-api-sample/internal/app/storage/psql"
+	"github.com/Extremal37/go-http-api-sample/internal/app/storage/slice"
 	"github.com/Extremal37/go-http-api-sample/internal/cfg"
 	"github.com/Extremal37/go-http-api-sample/internal/log"
 	"os"
@@ -62,7 +62,11 @@ func main() {
 	select {
 	case <-ctx.Done():
 		stop()
-		server.Shutdown()
+		err = server.Shutdown()
+		if err != nil {
+			logger.Errorf("The service has been terminated with error:%v", err)
+			os.Exit(1)
+		}
 		logger.Info("The service has been terminated successfully")
 		os.Exit(0)
 	}

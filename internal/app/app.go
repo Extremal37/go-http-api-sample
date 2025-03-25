@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/Extremal37/go-http-api-sample/internal/app/processor"
 	"github.com/Extremal37/go-http-api-sample/internal/cfg"
 	"github.com/gorilla/mux"
@@ -41,10 +42,11 @@ func (s *Server) Serve(routes *mux.Router) {
 	}
 
 }
-func (s *Server) Shutdown() {
+func (s *Server) Shutdown() error {
 	if s.httpServer != nil {
 		if err := s.httpServer.Shutdown(context.Background()); err != nil {
-			s.log.Errorf("Failed to shutdown HTTP Server: %v", err)
+			return fmt.Errorf("failed to shutdown HTTP Server: %w", err)
 		}
 	}
+	return nil
 }
