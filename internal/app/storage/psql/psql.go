@@ -40,12 +40,6 @@ func NewStorage(ctx context.Context, conf cfg.Postgres, log *zap.SugaredLogger) 
 	}
 	s.conn = db
 
-	if err = s.checkConnection(ctx); err != nil {
-		s.conn.Close()
-		s.log.Fatalf("unable to ping database: %s", err.Error())
-		return nil
-	}
-
 	if err = s.migrateUp(); err != nil {
 		s.conn.Close()
 		s.log.Fatalf("unable to migrate up: %s", err.Error())
