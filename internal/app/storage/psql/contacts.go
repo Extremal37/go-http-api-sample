@@ -2,6 +2,7 @@ package psql
 
 import (
 	"context"
+	"fmt"
 	"github.com/Extremal37/go-http-api-sample/internal/app/models"
 	"github.com/jackc/pgx/v5"
 )
@@ -35,8 +36,7 @@ func (s *Storage) AddContact(ctx context.Context, contact models.Contact) error 
 	query := `INSERT INTO contacts (first_name,last_name) VALUES ($1,$2)`
 	_, err := s.conn.Exec(c, query, dto.FirstName, dto.LastName)
 	if err != nil {
-		s.log.Errorf("Failed to insert contact to DB: %v", err)
-		return err
+		return fmt.Errorf("failed to insert contact to DB: %w", err)
 	}
 	return nil
 }
@@ -51,13 +51,11 @@ func (s *Storage) GetContacts(ctx context.Context) ([]models.Contact, error) {
 	contacts := make([]models.Contact, 0)
 	rows, err := s.conn.Query(c, query)
 	if err != nil {
-		s.log.Errorf("Failed to get contacts from DB: %v", err)
-		return contacts, err
+		return contacts, fmt.Errorf("failed to get contacts from DB: %w", err)
 	}
 	dtos, err = pgx.CollectRows(rows, pgx.RowToStructByName[ContactStorageDTO])
 	if err != nil {
-		s.log.Errorf("Failed to scan rows to struct: %v", err)
-		return contacts, err
+		return contacts, fmt.Errorf("failed to scan rows to struct: %w", err)
 	}
 
 	for _, v := range dtos {
