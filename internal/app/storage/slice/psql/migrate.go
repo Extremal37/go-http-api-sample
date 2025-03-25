@@ -35,7 +35,7 @@ func (s *Storage) migrateUp() error {
 	}
 
 	if err = m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
-		return err
+		return fmt.Errorf("failed to UP migration: %w", err)
 	}
 
 	return nil
