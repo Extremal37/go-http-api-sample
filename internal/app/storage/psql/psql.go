@@ -50,16 +50,6 @@ func NewStorage(ctx context.Context, conf cfg.Postgres, log *zap.SugaredLogger) 
 	return &s
 }
 
-// checkConnection checks if connection still successful
-func (s *Storage) checkConnection(ctx context.Context) error {
-	ctxTimeout, cancel := context.WithTimeout(ctx, connectionTimeout)
-	defer cancel()
-	if err := s.conn.Ping(ctxTimeout); err != nil {
-		return fmt.Errorf("connection check failed: %w", err)
-	}
-	return nil
-}
-
 func (s *Storage) Stop() {
 	s.conn.Close()
 }
