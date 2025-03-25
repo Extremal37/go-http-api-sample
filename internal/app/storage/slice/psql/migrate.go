@@ -24,15 +24,16 @@ func (s *Storage) migrateUp() error {
 		return fmt.Errorf("failed to get database instance: %w", err)
 	}
 
-	m, err := migrate.NewWithInstance("iofs", sourceFs, "pgx", conn)
-	if err != nil {
-		return fmt.Errorf("failed to create migration instance: %w", err)
-	}
 	defer func() {
 		if err = sourceFs.Close(); err != nil {
 			s.log.Errorf("failed to close file: %v", err)
 		}
 	}()
+	m, err := migrate.NewWithInstance("iofs", sourceFs, "pgx", conn)
+	if err != nil {
+		return fmt.Errorf("failed to create migration instance: %w", err)
+	}
+
 	if err = m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
 		return err
 	}
