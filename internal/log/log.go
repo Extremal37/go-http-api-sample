@@ -7,14 +7,17 @@ import (
 	"os"
 )
 
-func NewLogger(level string) *zap.SugaredLogger {
+func NewLogger(level string) (*zap.SugaredLogger, error) {
 	config := zap.NewProductionConfig()
 	config.Level.SetLevel(getLevel(level))
 	config.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05.000000")
 	config.Encoding = "console"
 	config.DisableStacktrace = true
-	logger, _ := config.Build()
-	return logger.Sugar()
+	logger, err := config.Build()
+	if err != nil {
+		return nil, fmt.Errorf("unable to build config: %w", err)
+	}
+	return logger.Sugar(), nil
 }
 
 func getLevel(level string) zapcore.Level {

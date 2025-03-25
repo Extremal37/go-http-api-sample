@@ -31,7 +31,10 @@ func main() {
 	}
 
 	// Init logger
-	logger := log.NewLogger(config.App.Logging)
+	logger, err := log.NewLogger(config.App.Logging)
+	if err != nil {
+		log.Fatalf("Cannot init logger: %v", err)
+	}
 
 	// Creating server with loaded config
 	logger.Infof("%s starting", appName)
