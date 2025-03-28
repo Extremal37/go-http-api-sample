@@ -62,7 +62,6 @@ func main() {
 			db.Close()
 		}()
 		if err = psql.MigrateUp(db); err != nil {
-			db.Close()
 			log.Fatalf("unable to migrate up: %s", err.Error())
 		}
 
