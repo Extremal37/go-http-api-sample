@@ -19,17 +19,17 @@ func MigrateUp(pool *pgxpool.Pool) error {
 	if err != nil {
 		return fmt.Errorf("failed to create fs source driver: %w", err)
 	}
+	defer func() {
+		if err = sourceFs.Close(); err != nil {
+			fmt.Printf("failed to close file: %v", err)
+		}
+	}()
 	db := stdlib.OpenDB(*pool.Config().ConnConfig)
 	conn, err := pgxv5.WithInstance(db, &pgxv5.Config{})
 	if err != nil {
 		return fmt.Errorf("failed to get database instance: %w", err)
 	}
 
-	defer func() {
-		if err = sourceFs.Close(); err != nil {
-			fmt.Printf("failed to close file: %v", err)
-		}
-	}()
 	m, err := migrate.NewWithInstance("iofs", sourceFs, "pgx", conn)
 	if err != nil {
 		return fmt.Errorf("failed to create migration instance: %w", err)
