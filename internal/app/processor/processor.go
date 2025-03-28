@@ -9,7 +9,6 @@ import (
 type Storage interface {
 	AddContact(ctx context.Context, contact models.Contact) error
 	GetContacts(ctx context.Context) ([]models.Contact, error)
-	Stop()
 }
 
 type Processor struct {

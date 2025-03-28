@@ -70,9 +70,6 @@ func main() {
 	default:
 		logger.Fatalf("Unknown storage %s. Supported storages are %v", config.App.Storage, []string{storagePostgres, storageSlice})
 	}
-	defer func() {
-		storage.Stop()
-	}()
 
 	logger.Debug("Spawning processor and handler")
 	proc := processor.NewProcessor(storage, logger)

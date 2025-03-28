@@ -55,6 +55,3 @@ func (s *Storage) GetContacts(ctx context.Context) ([]models.Contact, error) {
 	}
 	return contacts, nil
 }
-func (s *Storage) Stop() {
-	s.log.Debug("Method not implemented")
-}
