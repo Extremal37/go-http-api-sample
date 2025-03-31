@@ -1,6 +1,7 @@
 package psql
 
 import (
+	"context"
 	"embed"
 	"errors"
 	"fmt"
@@ -14,7 +15,7 @@ import (
 //go:embed migrations
 var fsMigrations embed.FS
 
-func MigrateUp(pool *pgxpool.Pool) error {
+func MigrateUp(ctx context.Context, postgresDsn string) error {
 	sourceFs, err := iofs.New(fsMigrations, "migrations")
 	if err != nil {
 		return fmt.Errorf("failed to create fs source driver: %w", err)
@@ -24,6 +25,15 @@ func MigrateUp(pool *pgxpool.Pool) error {
 			fmt.Printf("failed to close file: %v", err)
 		}
 	}()
+
+	pool, err := pgxpool.New(ctx, postgresDsn)
+	if err != nil {
+		return fmt.Errorf("unable to establish connection to database: %v", err)
+	}
+	defer func() {
+		pool.Close()
+	}()
+
 	db := stdlib.OpenDB(*pool.Config().ConnConfig)
 	conn, err := pgxv5.WithInstance(db, &pgxv5.Config{})
 	if err != nil {

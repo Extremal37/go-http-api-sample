@@ -61,7 +61,7 @@ func main() {
 			logger.Info("Closing database connections")
 			db.Close()
 		}()
-		if err = psql.MigrateUp(db); err != nil {
+		if err = psql.MigrateUp(ctxTimeout, postgresDsn); err != nil {
 			log.Fatalf("unable to migrate up: %s", err.Error())
 		}
 
