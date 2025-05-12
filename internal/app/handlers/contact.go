@@ -28,7 +28,14 @@ func jsonToContact(json ContactJsonDTO) models.Contact {
 }
 
 func (h *Handler) GetContacts(w http.ResponseWriter, r *http.Request) {
-	contactsRaw := h.p.GetContacts()
+	contactsRaw, err := h.p.GetContacts(r.Context())
+	if err != nil {
+		errWrap := wrapError(w, fmt.Errorf("unable to get contacts: %w", err))
+		if errWrap != nil {
+			h.log.Warnf("unable to send error response for GetContacts func: %v", errWrap)
+		}
+		return
+	}
 	var contactsJSON []ContactJsonDTO
 
 	for _, v := range contactsRaw {
@@ -40,30 +47,49 @@ func (h *Handler) GetContacts(w http.ResponseWriter, r *http.Request) {
 		Result:  contactsJSON,
 	}
 
-	h.WrapOK(w, m)
+	err = wrapOK(w, m)
+	if err != nil {
+		h.log.Warnf("unable to send success response for GetContacts func: %v", err)
+	}
 }
 
 func (h *Handler) AddContact(w http.ResponseWriter, r *http.Request) {
 	// Read request body.
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		h.WrapBadRequest(w, fmt.Errorf("unable to read request body: %w", err))
+		errWrap := wrapBadRequest(w, fmt.Errorf("unable to read request body: %w", err))
+		if errWrap != nil {
+			h.log.Warnf("unable to send error response for AddContact func: %v", errWrap)
+		}
 		return
 	}
 
 	var contactJSON ContactJsonDTO
 
 	if err = json.Unmarshal(body, &contactJSON); err != nil {
-		h.WrapBadRequest(w, fmt.Errorf("unable to parse contacat payload: %w", err))
+		errWrap := wrapBadRequest(w, fmt.Errorf("unable to parse contacat payload: %w", err))
+		if errWrap != nil {
+			h.log.Warnf("unable to send error response for AddContact func: %v", errWrap)
+		}
 		return
 	}
 
-	h.p.AddContact(jsonToContact(contactJSON))
+	err = h.p.AddContact(r.Context(), jsonToContact(contactJSON))
+	if err != nil {
+		errWrap := wrapError(w, fmt.Errorf("unable to add contact: %w", err))
+		if errWrap != nil {
+			h.log.Warnf("unable to send error response for AddContact func: %v", errWrap)
+		}
+		return
+	}
+
 	m := ResponseSuccess{
 		Success: true,
 		Result:  nil,
 	}
 
-	h.WrapNew(w, m)
-
+	err = wrapNew(w, m)
+	if err != nil {
+		h.log.Warnf("unable to send success response for GetContacts func: %v", err)
+	}
 }

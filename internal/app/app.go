@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/Extremal37/go-http-api-sample/internal/app/processor"
 	"github.com/Extremal37/go-http-api-sample/internal/cfg"
 	"github.com/gorilla/mux"
@@ -10,8 +11,6 @@ import (
 
 	"go.uber.org/zap"
 )
-
-const appName = "HTTP API Sample Server by Dmitry Tumalanov"
 
 type Server struct {
 	log    *zap.SugaredLogger
@@ -32,7 +31,6 @@ func NewServer(cfg *cfg.Configuration, processor *processor.Processor, storage p
 }
 
 func (s *Server) Serve(routes *mux.Router) {
-	s.log.Infof("%s starting", appName)
 	s.log.Infof("Starting HTTP listener on address %s", s.config.App.Address)
 	s.httpServer = &http.Server{
 		Addr:    s.config.App.Address,
@@ -44,10 +42,11 @@ func (s *Server) Serve(routes *mux.Router) {
 	}
 
 }
-func (s *Server) Shutdown() {
+func (s *Server) Shutdown() error {
 	if s.httpServer != nil {
 		if err := s.httpServer.Shutdown(context.Background()); err != nil {
-			s.log.Errorf("Failed to shutdown HTTP Server: %v", err)
+			return fmt.Errorf("failed to shutdown HTTP Server: %w", err)
 		}
 	}
+	return nil
 }
