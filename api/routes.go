@@ -11,11 +11,6 @@ import (
 type Handler interface {
 	GetContacts(w http.ResponseWriter, r *http.Request)
 	AddContact(w http.ResponseWriter, r *http.Request)
-	WrapErrorWithStatus(w http.ResponseWriter, msg error, httpStatus int)
-	WrapSuccessStatus(w http.ResponseWriter, m handlers.ResponseSuccess, httpStatus int)
-	WrapNew(w http.ResponseWriter, m handlers.ResponseSuccess)
-	WrapOK(w http.ResponseWriter, m handlers.ResponseSuccess)
-	WrapBadRequest(w http.ResponseWriter, err error)
 	WrapNotFound(w http.ResponseWriter, r *http.Request)
 	WrapMethodNotAllowed(w http.ResponseWriter, r *http.Request)
 }
